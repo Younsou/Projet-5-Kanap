@@ -23,10 +23,10 @@ fetch(`http://localhost:3000/api/products/${id}`)
         end 
         */
 
+        let kanapImg = document.createElement("img");
         let kanapName = document.getElementById("title");
         let kanapPrice = document.getElementById("price");
         let kanapDescription = document.getElementById("description");
-        let kanapImg = document.createElement("img");
 
         kanapImg.src = productData.imageUrl;
         kanapName.innerText = productData.name;
@@ -92,7 +92,7 @@ function SelectionnerQuantity(productData) {
             productData.color = color;
             // Appel la fonction si condition ok:
             ajouterPanier(productData);
-            alert("Article ajouté au panier")
+
         }
     });
 }
@@ -119,7 +119,7 @@ function ajouterPanier(productData) {
             currentProduct.color === productData.color
         ) {
             found = true;
-            alert("Attention! Cet article est déjà dans votre panier");
+            alert("Attention! Cet article est déjà dans votre panier. La quantité a été mis à jour.");
             // Additionne l'ancienne quantité avec la nouvelle:
             let newQuantity =
                 parseInt(currentProduct.quantity) + parseInt(productData.quantity);
@@ -128,6 +128,7 @@ function ajouterPanier(productData) {
     }
     if (!found) {
         saveProducts.push(productData);
+        alert("Article ajouté au panier")
     }
     // Renvoi au localStorage:
     localStorage.productStorage = JSON.stringify(saveProducts);
