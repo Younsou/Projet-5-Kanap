@@ -7,7 +7,7 @@ const fetchProducts = async () => {
     await fetch('http://localhost:3000/api/products')
         .then(res => res.json()) // On fait une promesse en renvoyant la réponse traité en JSON.
         .then(json => products = json)  // On définit un paramètre pour products en réutilisant .then 
-        .catch((error) => console.error(error));
+        .catch(err => console.log("erreur :(", err));
 
     // On récupère ce qu'il y a dans le local storage:   
     let articleClient = JSON.parse(localStorage.getItem("productStorage"));

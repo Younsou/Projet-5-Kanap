@@ -36,7 +36,9 @@ fetch(`http://localhost:3000/api/products/${id}`)
         kanapImgContainer.appendChild(kanapImg);
         remplirListeCouleurs(productData);
         SelectionnerQuantity(productData);
-    });
+    })
+    .catch(err => console.log("erreur :(", err));
+
 
 //===========================================//===========================================//===========================================
 // Construction du choix des couleurs
@@ -130,4 +132,3 @@ function ajouterPanier(productData) {
     // Renvoi au localStorage:
     localStorage.productStorage = JSON.stringify(saveProducts);
 }
-

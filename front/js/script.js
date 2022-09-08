@@ -31,9 +31,5 @@ fetch("http://localhost:3000/api/products")
 
             document.getElementById("items").appendChild(kanap_id);
         }
-    });
-
-
-
-
-
+    })
+    .catch(err => console.log("erreur :(", err));
