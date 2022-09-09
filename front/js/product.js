@@ -5,6 +5,12 @@ const queryString = window.location.search;
 const Params = new URLSearchParams(queryString);
 const id = Params.get("id");
 
+
+
+// Tableau de donnée des produits selectionné
+let selectedKanap = {};
+// Produit du client est id du produit
+selectedKanap._id = id;
 //===========================================//===========================================//===========================================
 // Récupération des produits de l'api et traitement des données
 //===========================================//===========================================//===========================================
@@ -29,13 +35,14 @@ fetch(`http://localhost:3000/api/products/${id}`)
         let kanapDescription = document.getElementById("description");
 
         kanapImg.src = productData.imageUrl;
-        kanapName.innerText = productData.name;
-        kanapPrice.innerText = productData.price;
-        kanapDescription.innerText = productData.description;
+        kanapName.textContent = productData.name;
+        kanapPrice.textContent = productData.price;
+        kanapDescription.textContent = productData.description;
 
         kanapImgContainer.appendChild(kanapImg);
         remplirListeCouleurs(productData);
         SelectionnerQuantity(productData);
+        console.log(productData);
     })
     .catch(err => console.log("erreur :(", err));
 
@@ -56,7 +63,7 @@ function remplirListeCouleurs(productData) {
 //===========================================//===========================================//===========================================
 // Choix quantité dynamique
 //===========================================//===========================================//===========================================
-function SelectionnerQuantity(productData) {
+function SelectionnerQuantity() {
     let SelectQuantity = document.querySelector('input[type="number"]');
     // On écoute ce qu'il se passe dans input[name="itemQuantity"]:
     SelectQuantity.addEventListener("input", (e) => {
@@ -65,7 +72,7 @@ function SelectionnerQuantity(productData) {
         let quantityProduct = e.target.value;
 
         // On ajoute la quantité à l'objet quantityProduct:
-        productData.quantity = quantityProduct;
+        selectedKanap.quantity = quantityProduct;
         console.log(quantityProduct);
     });
 
@@ -81,17 +88,17 @@ function SelectionnerQuantity(productData) {
         console.log(color);
         if (
             // Valeurs créées dynamiquement au clic (voir choix quantité et choix colors):
-            productData.quantity < 1 ||
-            productData.quantity > 100 ||
-            productData.quantity === undefined ||
+            selectedKanap.quantity < 1 ||
+            selectedKanap.quantity > 100 ||
+            selectedKanap.quantity === undefined ||
             color === "" ||
             color === undefined
         ) {
             alert("Veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
         } else {
-            productData.color = color;
+            selectedKanap.color = color;
             // Appel la fonction si condition ok:
-            ajouterPanier(productData);
+            ajouterPanier();
 
         }
     });
@@ -102,34 +109,36 @@ function SelectionnerQuantity(productData) {
 //===========================================//===========================================//===========================================
 // Tableau localstorage:
 let saveProducts = [];
+console.log(saveProducts);
 
-function ajouterPanier(productData) {
-    console.log(productData);
+function ajouterPanier() {
     // Variable du tableau localStorage ('productStorage'):
     saveProducts = JSON.parse(localStorage.getItem("productStorage"));
     // Si produits Enregistrés:
     if (saveProducts == null) {
         saveProducts = [];
+
     }
     var found = false;
     for (let currentProduct of saveProducts) {
         // Compare si l'article existe dans le panier:
         if (
-            currentProduct._id === productData._id &&
-            currentProduct.color === productData.color
+            currentProduct._id === selectedKanap._id &&
+            currentProduct.color === selectedKanap.color
         ) {
             found = true;
             alert("Attention! Cet article est déjà dans votre panier. La quantité a été mis à jour.");
             // Additionne l'ancienne quantité avec la nouvelle:
             let newQuantity =
-                parseInt(currentProduct.quantity) + parseInt(productData.quantity);
+                parseInt(currentProduct.quantity) + parseInt(selectedKanap.quantity);
             currentProduct.quantity = JSON.stringify(newQuantity);
         }
     }
     if (!found) {
-        saveProducts.push(productData);
+        saveProducts.push(selectedKanap);
         alert("Article ajouté au panier")
     }
     // Renvoi au localStorage:
     localStorage.productStorage = JSON.stringify(saveProducts);
+    console.log(saveProducts);
 }

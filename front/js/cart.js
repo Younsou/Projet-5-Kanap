@@ -1,3 +1,6 @@
+// On récupère ce qu'il y a dans le local storage:   
+let articleClient = JSON.parse(localStorage.getItem("productStorage"));
+
 //===========================================//===========================================//===========================================
 // Récupération des produits de l'api
 //===========================================//===========================================//===========================================
@@ -8,9 +11,6 @@ const fetchProducts = async () => {
         .then(res => res.json()) // On fait une promesse en renvoyant la réponse traité en JSON.
         .then(json => products = json)  // On définit un paramètre pour products en réutilisant .then 
         .catch(err => console.log("erreur :(", err));
-
-    // On récupère ce qu'il y a dans le local storage:   
-    let articleClient = JSON.parse(localStorage.getItem("productStorage"));
 
     const cartDisplay = async () => {
 
@@ -69,7 +69,7 @@ const fetchProducts = async () => {
         // Ajout d'un "p" qui va contenir le prix du produit:
         let cartPrice = document.createElement("p");
         divDescription.appendChild(cartPrice);
-        cartPrice.innerText = articleClient[i].price + " €";
+        cartPrice.innerHTML = `${articleClient[i].price} €`;
         console.log(divDescription);
 
         // Ajout d'une div en lien avec les differents produits:
