@@ -215,7 +215,8 @@ function validDivers(value) {
 
 // Conditions pour le remplissage de l'adresse:
 function validAdresse(value) {
-    return /^[A-Z-a-z-0-9\s]{3,40}$/.test(value)
+    return /^[0-9]{1,5}[a-z-A-Z\s]{2,8}[a-z-A-Z -.,]{3,40}$/.test(value)
+
 }
 
 // Condition pour le remplissage de l'Email:
