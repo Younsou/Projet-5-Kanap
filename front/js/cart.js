@@ -1,37 +1,58 @@
-// On récupère ce qu'il y a dans le local storage:   
-let articleClient = JSON.parse(localStorage.getItem("productStorage"));
-
 //===========================================//===========================================//===========================================
 // Récupération des produits de l'api
 //===========================================//===========================================//===========================================
-let products;
-const fetchProducts = async () => {
-    // On va chercher l'API avec la méthode fetch:
-    await fetch('http://localhost:3000/api/products')
-        .then(res => res.json()) // On fait une promesse en renvoyant la réponse traité en JSON.
-        .then(json => products = json)  // On définit un paramètre pour products en réutilisant .then 
-        .catch(err => console.log("erreur :(", err));
 
-    const cartDisplay = async () => {
+// On va chercher l'API avec la méthode fetch:
+fetch(`http://localhost:3000/api/products`)
+    .then(res => res.json()) // On fait une promesse en renvoyant la réponse traité en JSON.
+    .then((kanaps) => {
+        // appel de la fonction panierInit
+        panierInit(kanaps);  // On définit un paramètre pour products en réutilisant .then 
+    })
+    .catch(err => console.log("erreur :(", err));
 
-        if (articleClient) { // On récupère bien articleClient 
-            await articleClient;
+// Récupère info de l'API   
+function panierInit(kanaps) {
+    // On récupère le panier avec info des produit sélectionner par le client:
+    let panierClient = JSON.parse(localStorage.getItem("productStorage"));
+    // Si il y a un panier:
+    if (panierClient && panierClient.length != 0) {
+        // On récupère un article dans le panier:
+        for (let articleClient of panierClient) {
+            // On crée boucle pour récupèrer un produit de la Data:
+            for (let p = 0; p < kanaps.length; p++) {
+                // Si article id choisi a correspondance avec un produit en data:
+                if (articleClient._id === kanaps[p]._id) {
+                    // Création et ajout des valeurs correspondante:
+                    articleClient.name = kanaps[p].name;
+                    articleClient.price = kanaps[p].price;
+                    articleClient.image = kanaps[p].imageUrl;
+                    articleClient.description = kanaps[p].description;
+                    articleClient.alt = kanaps[p].altTxt;
+                    console.log(articleClient);
+                }
+            }
+
         }
+        panierDisplay(panierClient);
     }
-    cartDisplay();
+}
 
-    //===========================================//===========================================//===========================================
-    // Affichage des produits du panier
-    //===========================================//===========================================//===========================================
-    for (let i = 0; i < articleClient.length; i++) {
+//===========================================//===========================================//===========================================
+// Affichage des produits du panier
+//===========================================//===========================================//===========================================
+function panierDisplay(kanaps) {
+    // On récupère ce qu'il y a dans le local storage:   
+    let selectionClient = JSON.parse(localStorage.getItem("productStorage"));
+    for (let i = 0; i < selectionClient.length; i++) {
 
         let cartItems = document.getElementById("cart__items");
 
         // On ajoute l'élément "article":
         let cartArticles = document.createElement("article");
         cartItems.appendChild(cartArticles);
-        cartArticles.data_id = articleClient[i]._id;
-        cartArticles.data_color = articleClient[i].color;
+        cartArticles.data_id = kanaps[i]._id;
+        cartArticles.data_color = selectionClient[i].color;
         cartArticles.className = "cart__item";
 
 
@@ -42,8 +63,8 @@ const fetchProducts = async () => {
 
         // On ajoute l'élément img: 
         let cartImages = document.createElement("img");
-        cartImages.src = articleClient[i].imageUrl;
-        cartImages.alt = articleClient[i].altTxt;
+        cartImages.src = kanaps[i].image;
+        cartImages.alt = kanaps[i].alt;
         imageContainer.appendChild(cartImages)
 
         // On ajoute une div en lien avec "article":
@@ -59,18 +80,18 @@ const fetchProducts = async () => {
         // Ajout du "h2" qui va contenir le nom du produit:
         let cartName = document.createElement("h2");
         divDescription.appendChild(cartName);
-        cartName.innerText = articleClient[i].name;
+        cartName.innerText = kanaps[i].name;
 
         // Ajout d'un "p" qui va contenir la couleur du produit:
         let cartColor = document.createElement("p");
         divDescription.appendChild(cartColor);
-        cartColor.innerText = articleClient[i].color;
+        cartColor.innerText = selectionClient[i].color;
 
         // Ajout d'un "p" qui va contenir le prix du produit:
         let cartPrice = document.createElement("p");
         divDescription.appendChild(cartPrice);
-        cartPrice.innerHTML = `${articleClient[i].price} €`;
-        console.log(divDescription);
+        cartPrice.innerText = `${kanaps[i].price} €`;
+
 
         // Ajout d'une div en lien avec les differents produits:
         let divSetting = document.createElement("div");
@@ -90,7 +111,7 @@ const fetchProducts = async () => {
         // Ajout de l'input qui va contenir la quantité:
         let inputQuantity = document.createElement("input");
         divQuantity.appendChild(inputQuantity);
-        inputQuantity.value = articleClient[i].quantity;
+        inputQuantity.value = selectionClient[i].quantity;
         inputQuantity.className = "itemQuantity";
         inputQuantity.setAttribute("type", "number");
         inputQuantity.setAttribute("min", "1");
@@ -133,7 +154,7 @@ const fetchProducts = async () => {
 
             for (let k = 0; k < productQuantity; ++k) {
                 // On multiplie la quantité par le prix  (prix récupéré de l'api):
-                totalPrice += itemQuantity[k].valueAsNumber * articleClient[k].price;
+                totalPrice += itemQuantity[k].valueAsNumber * kanaps[k].price;
             }
 
             // On cible l'id "totalQuantity":
@@ -164,13 +185,13 @@ const fetchProducts = async () => {
                     let inputValue = quantityModif[l].valueAsNumber;
 
                     // On récupère la quantité du localStorage:
-                    articleClient[l].quantity = inputValue;
+                    selectionClient[l].quantity = inputValue;
 
                     // On rappelle la fonction pour que le prix s'actualise en temps réel:
                     totalProduct();
 
                     // On rafraichi la quantité dans le localStorage:
-                    localStorage.setItem("productStorage", JSON.stringify(articleClient));
+                    localStorage.setItem("productStorage", JSON.stringify(selectionClient));
 
                 });
             }
@@ -187,14 +208,14 @@ const fetchProducts = async () => {
                 if (window.confirm("Voulez vous supprimer cet article?")) {
 
                     // On enregistre l'id et la couleur séléctionnés par le bouton supprimer:
-                    let deleteId = articleClient[i]._id;
-                    let deleteColor = articleClient[i].color;
+                    let deleteId = selectionClient[i]._id;
+                    let deleteColor = selectionClient[i].color;
 
                     // Filtre l'élément cliqué par le bouton supprimer:
-                    articleClient = articleClient.filter(el => el._id !== deleteId || el.color !== deleteColor);
+                    selectionClient = selectionClient.filter(el => el._id !== deleteId || el.color !== deleteColor);
 
                     // On rafraichi la quantité dans le localStorage:
-                    localStorage.setItem("productStorage", JSON.stringify(articleClient));
+                    localStorage.setItem("productStorage", JSON.stringify(selectionClient));
                     // Rafraichi la page:
                     location.reload();
                 }
@@ -203,8 +224,8 @@ const fetchProducts = async () => {
 
         deleteProducts();
     }
-}
 
+}
 //===========================================//===========================================//===========================================
 // Formulaire pour passer commande
 //===========================================//===========================================//===========================================
@@ -215,6 +236,7 @@ function validDivers(value) {
 
 // Conditions pour le remplissage de l'adresse:
 function validAdresse(value) {
+    // return /^[A-Z-a-z-0-9\s]{3,40}$/.test(value)
     return /^[0-9]{1,5}[a-z-A-Z\s]{2,8}[a-z-A-Z -.,]{3,40}$/.test(value)
 
 }
@@ -322,7 +344,7 @@ validateCommand.addEventListener("click", async (e) => {
 
         // Push info commande final dans commandId:
         await commandeFinal.forEach((commande) => {
-            commandeId.push(commande._id); //voir ajout: quantité, articleClient, couleur
+            commandeId.push(commande._id); //voir ajout: quantité, selectionClient, couleur
 
 
             // On Stock les info dans la data pour envoyer à l'API par method Post:
@@ -378,5 +400,3 @@ validateCommand.addEventListener("click", async (e) => {
         alert("Veuillez remplir correctement le formulaire");
     }
 });
-
-fetchProducts();

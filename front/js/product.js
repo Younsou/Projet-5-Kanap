@@ -9,7 +9,7 @@ const id = Params.get("id");
 
 // Tableau de donnée des produits selectionné
 let selectedKanap = {};
-// Produit du client est id du produit
+// Le produit selectionné est l'id du produit
 selectedKanap._id = id;
 //===========================================//===========================================//===========================================
 // Récupération des produits de l'api et traitement des données
