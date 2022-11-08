@@ -51,7 +51,7 @@ function panierDisplay(kanaps) {
         // On ajoute l'élément "article":
         let cartArticles = document.createElement("article");
         cartItems.appendChild(cartArticles);
-        cartArticles.data_id = kanaps[i]._id;
+        cartArticles.data_id = selectionClient[i]._id;
         cartArticles.data_color = selectionClient[i].color;
         cartArticles.className = "cart__item";
 

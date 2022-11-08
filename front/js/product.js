@@ -11,6 +11,7 @@ const id = Params.get("id");
 let selectedKanap = {};
 // Le produit selectionné est l'id du produit
 selectedKanap._id = id;
+console.log(selectedKanap);
 //===========================================//===========================================//===========================================
 // Récupération des produits de l'api et traitement des données
 //===========================================//===========================================//===========================================
