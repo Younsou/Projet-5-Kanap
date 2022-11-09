@@ -3,7 +3,7 @@
 //===========================================//===========================================//===========================================
 
 // On va chercher l'API avec la méthode fetch:
-fetch("http://localhost:3000/api/products")
+fetch("https://back-kanap-d3iv3cjtx-younsou.vercel.app/api/products")
     .then(res => res.json()) // On renvoi une réponse en promesse traité en JSON
     .then(mappedProducts => { // On définit un paramètre pour mappedProducts en réutilisant .then
         for (let product of mappedProducts) {
@@ -15,7 +15,7 @@ fetch("http://localhost:3000/api/products")
             let kanapDescription = document.createElement("p");
             let kanapElement = document.createElement("article");
 
-            kanap_id.href = ("./product.html?id=" + product._id);
+            kanap_id.href = ("./html/product.html?id=" + product._id);
             kanapImg.src = product.imageUrl;
             kanapName.innerText = product.name;
             kanapAltText.alt = product.name;

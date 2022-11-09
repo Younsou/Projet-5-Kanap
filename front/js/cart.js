@@ -3,7 +3,7 @@
 //===========================================//===========================================//===========================================
 
 // On va chercher l'API avec la méthode fetch:
-fetch(`http://localhost:3000/api/products`)
+fetch(`https://back-kanap-d3iv3cjtx-younsou.vercel.app/api/products`)
     .then(res => res.json()) // On fait une promesse en renvoyant la réponse traité en JSON.
     .then((kanaps) => {
         // appel de la fonction panierInit
@@ -366,7 +366,7 @@ validateCommand.addEventListener("click", async (e) => {
         let commandeProducts = JSON.parse(localStorage.getItem("order"));
 
         // Méthode 'post' pour envoyer au back avec les arguments attendu:
-        fetch(`http://localhost:3000/api/products/order`, {
+        fetch(`https://back-kanap-d3iv3cjtx-younsou.vercel.app/api/products/order`, {
             method: "POST",
             body: JSON.stringify(data),
             headers: { "Content-Type": "application/json" },

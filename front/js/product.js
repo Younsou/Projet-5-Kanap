@@ -15,7 +15,7 @@ console.log(selectedKanap);
 //===========================================//===========================================//===========================================
 // Récupération des produits de l'api et traitement des données
 //===========================================//===========================================//===========================================
-fetch(`http://localhost:3000/api/products/${id}`)
+fetch(`https://back-kanap-d3iv3cjtx-younsou.vercel.app/api/products/${id}`)
     // Renvoi une réponse en promesse traité en json
     .then(res => res.json())
     .then(productData => {
